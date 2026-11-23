@@ -15,6 +15,13 @@ $consultaServicios = $conexion->query(
 );
 
 $totalServicios = $consultaServicios->fetchColumn();
+
+$consultaUsuarios = $conexion->query(
+    "SELECT COUNT(*) FROM usuarios"
+
+);
+ $totalUsuarios = $consultaUsuarios->fetchColumn();
+
 ?>
 
 <!DOCTYPE html>
@@ -32,19 +39,10 @@ $totalServicios = $consultaServicios->fetchColumn();
 <body>
 
     <!-- MENU LATERAL -->
-    <aside class="sidebar">
-
-        <div class="logo">
-            Tech<span>Services</span>
-        </div>
-
-        <a href="dashboard.php" class="active">Panel principal</a>
-
-        <a href="clientes/index.php">Clientes</a>
-
-        <a href="servicios/index.php">Servicios</a>
-
-    </aside>
+    <?php
+        $paginaActual = "dashboard";
+        include "includes/sidebar.php";
+    ?>
 
     <!-- CONTENIDO -->
     <main class="main-content">
@@ -62,6 +60,16 @@ $totalServicios = $consultaServicios->fetchColumn();
 
         <!-- TARJETAS -->
         <section class="cards">
+
+            <div class="card">
+                <h3>Total de Usuario</h3>
+
+                <div class="number">
+                    <?php echo $totalUsuarios; ?>
+                </div>
+
+                <p>Usuarios registrados</p>
+            </div>
 
             <div class="card">
                 <h3>Total de clientes</h3>
@@ -109,6 +117,10 @@ $totalServicios = $consultaServicios->fetchColumn();
 
             <a href="servicios/index.php" class="btn">
                 Gestionar servicios
+            </a>
+
+            <a href="usuarios/index.php" class="btn">
+                Gestionar usuarios
             </a>
 
         </section>
