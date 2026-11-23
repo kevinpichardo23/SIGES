@@ -1,16 +1,27 @@
 <?php
 
 $host = "localhost";
+$basedatos = "siges";
 $usuario = "root";
-$clave = "";
-$base_datos = "siges";
+$contrasena = "";
 
-$conexion = new mysqli($host, $usuario, $clave, $base_datos);
+try {
 
-if ($conexion->connect_error) {
-    die("Error de conexión: " . $conexion->connect_error);
+    $conexion = new PDO(
+        "mysql:host=$host;dbname=$basedatos;charset=utf8mb4",
+        $usuario,
+        $contrasena
+    );
+
+    $conexion->setAttribute(
+        PDO::ATTR_ERRMODE,
+        PDO::ERRMODE_EXCEPTION
+    );
+
+} catch (PDOException $e) {
+
+    die("Error de conexión: " . $e->getMessage());
+
 }
-
-$conexion->set_charset("utf8mb4");
 
 ?>
