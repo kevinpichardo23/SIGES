@@ -97,7 +97,7 @@ $servicios = $consulta->fetchAll(PDO::FETCH_ASSOC);
             Tech<span>Services</span>
         </div>
 
-        <a href="../index.php">Panel principal</a>
+        <a href="../dashboard.php">Panel principal</a>
 
         <a href="../clientes/index.php">Clientes</a>
 
