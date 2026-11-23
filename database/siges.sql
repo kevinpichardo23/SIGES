@@ -17,10 +17,12 @@ CREATE TABLE usuarios (
 CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nombre VARCHAR(100) NOT NULL,
-    identificacion VARCHAR(30) NOT NULL,
+    apellido VARCHAR(100) NOT NULL DEFAULT '',
+    identificacion VARCHAR(30) NULL,
     telefono VARCHAR(20) NOT NULL,
     correo VARCHAR(100) NOT NULL,
-    direccion VARCHAR(200) NOT NULL
+    direccion VARCHAR(200) NOT NULL,
+    estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo'
 ) ENGINE=InnoDB;
 
 -- Tabla de empleados
