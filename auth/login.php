@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iniciar sesión - TechServices</title>
+
+    <link rel="stylesheet" href="../assets/css/login.css">
+</head>
+
+<body>
+
+    <div class="form-container">
+
+        <h3 class="titulo">TechServices</h3>
+        <p> Sistema de Gestión de Servicios</p>
+
+        <form action="procesar_login.php" method="POST">
+
+            <div class="campo">
+                <label class="label" for="correo">Correo electrónico</label>
+                <input
+                    type="email"
+                    name="correo"
+                    id="correo"
+                    class="input"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label class="label" for="contrasena">Contraseña</label>
+                <input
+                    type="password"
+                    name="contrasena"
+                    id="contrasena"
+                    class="input"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="btn btn-primary">
+                Iniciar sesión
+            </button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>
