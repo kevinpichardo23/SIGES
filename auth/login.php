@@ -12,8 +12,7 @@
 
     <div class="form-container">
 
-        <h3 class="titulo">TechServices</h3>
-        <p> Sistema de Gestión de Servicios</p>
+        <h3 class="titulo">Tech<span>Services</span></h3>
 
         <form action="procesar_login.php" method="POST">
 
