@@ -1,0 +1,191 @@
+/* =====================================
+   PROYECTO: SERVICIOS TECNOLOGICOS
+   MODULO: CLIENTES Y SERVICIOS
+===================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #f4f6fa;
+    color: #263248;
+}
+
+/* MENU LATERAL */
+
+.sidebar {
+    position: fixed;
+    width: 250px;
+    height: 100vh;
+    background: #17243a;
+    color: white;
+    padding: 25px 18px;
+}
+
+.logo {
+    font-size: 21px;
+    font-weight: bold;
+    margin-bottom: 40px;
+}
+
+.logo span {
+    color: #38bdf8;
+}
+
+.sidebar a {
+    display: block;
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 14px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+
+.sidebar a:hover,
+.sidebar a.active {
+    background: #2563eb;
+    color: white;
+}
+
+/* CONTENIDO PRINCIPAL */
+
+.main-content {
+    margin-left: 250px;
+    padding: 30px;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 26px;
+}
+
+.header p {
+    color: #64748b;
+    margin-top: 5px;
+}
+
+/* TARJETAS */
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+}
+
+.card h3 {
+    color: #64748b;
+    font-size: 15px;
+    margin-bottom: 12px;
+}
+
+.card .number {
+    font-size: 30px;
+    font-weight: bold;
+    color: #1e40af;
+}
+
+/* SECCIONES */
+
+.section {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.05);
+    margin-bottom: 25px;
+}
+
+.section h2 {
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+/* BOTONES */
+
+.btn {
+    display: inline-block;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 7px;
+    background: #2563eb;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn:hover {
+    background: #1d4ed8;
+}
+
+.btn-danger {
+    background: #dc2626;
+}
+
+/* TABLAS */
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px;
+    text-align: left;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background: #f8fafc;
+    color: #475569;
+}
+
+/* FORMULARIOS */
+
+input, select, textarea {
+    width: 100%;
+    padding: 12px;
+    margin: 8px 0 18px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 14px;
+}
+
+label {
+    font-weight: 600;
+}
+
+/* ADAPTACION A PANTALLAS PEQUEÑAS */
+
+@media (max-width: 850px) {
+    .sidebar {
+        width: 190px;
+    }
+
+    .main-content {
+        margin-left: 190px;
+        padding: 18px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+    }
+}
