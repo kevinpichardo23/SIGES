@@ -140,19 +140,11 @@ $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
 
-    <aside class="sidebar">
-
-        <div class="logo">
-            Tech<span>Services</span>
-        </div>
-
-        <a href="../dashboard.php">Panel principal</a>
-
-        <a href="index.php" class="active">Clientes</a>
-
-        <a href="../servicios/index.php">Servicios</a>
-
-    </aside>
+    <?php
+        $paginaActual = "clientes";
+        $rutaBase = "../";
+        include "../includes/sidebar.php";
+    ?>
 
     <main class="main-content">
 
