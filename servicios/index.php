@@ -90,20 +90,11 @@ $servicios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
 <body>
 
-    <!-- MENU LATERAL -->
-    <aside class="sidebar">
-
-        <div class="logo">
-            Tech<span>Services</span>
-        </div>
-
-        <a href="../dashboard.php">Panel principal</a>
-
-        <a href="../clientes/index.php">Clientes</a>
-
-        <a href="index.php" class="active">Servicios</a>
-
-    </aside>
+    <?php
+        $paginaActual = "servicios";
+        $rutaBase = "../";
+        include "../includes/sidebar.php";
+    ?>
 
     <!-- CONTENIDO PRINCIPAL -->
     <main class="main-content">
