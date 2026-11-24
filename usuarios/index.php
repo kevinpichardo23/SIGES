@@ -149,31 +149,13 @@ if (isset($_GET["editar"])) {
     $usuarioEditar = $consulta->fetch(PDO::FETCH_ASSOC);
 }
 
-$busqueda = trim($_GET["buscar"] ?? "");
+$busqueda = "";
 
-if ($busqueda !== "") {
-
-    $consulta = $conexion->prepare(
-        "SELECT id, nombre, correo, rol
-         FROM usuarios
-         WHERE nombre LIKE ?
-         OR correo LIKE ?
-         ORDER BY id DESC"
-    );
-
-    $termino = "%$busqueda%";
-
-    $consulta->execute([$termino, $termino]);
-
-} else {
-
-    $consulta = $conexion->query(
-        "SELECT id, nombre, correo, rol
-         FROM usuarios
-         ORDER BY id DESC"
-    );
-
-}
+$consulta = $conexion->query(
+    "SELECT id, nombre, correo, rol
+     FROM usuarios
+     ORDER BY id DESC"
+);
 
 $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
@@ -195,6 +177,7 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
     <?php
         $paginaActual = "usuarios";
+        $rol="administrador";
         include "../includes/sidebar.php";
     ?>
 
@@ -221,7 +204,7 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <?php echo $usuarioEditar ? "Editar usuario" : "Registrar nuevo usuario"; ?>
             </h2>
 
-            <form method="POST" action="index.php">
+            <form method="POST" action="index.php" id="usuarioForm" novalidate>
 
                 <input
                     type="hidden"
@@ -239,39 +222,42 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
                 <?php endif; ?>
 
-                <label>Nombre:</label>
+                   <label>Nombre:</label>
 
-                <input
-                    type="text"
-                    name="nombre"
-                    required
-                    value="<?php echo limpiar($usuarioEditar["nombre"] ?? ""); ?>"
-                    placeholder="Ingrese el nombre"
-                >
+                    <input
+                        type="text"
+                        id="nombre"
+                        name="nombre"
+                        required
+                        value="<?php echo limpiar($usuarioEditar["nombre"] ?? ""); ?>"
+                        placeholder="Ingrese el nombre"
+                    >
 
-                <label>Correo electrónico:</label>
+                    <label>Correo electrónico:</label>
 
-                <input
-                    type="email"
-                    name="correo"
-                    required
-                    value="<?php echo limpiar($usuarioEditar["correo"] ?? ""); ?>"
-                    placeholder="ejemplo@correo.com"
-                >
+                    <input
+                        type="email"
+                        id="correo"
+                        name="correo"
+                        required
+                        value="<?php echo limpiar($usuarioEditar["correo"] ?? ""); ?>"
+                        placeholder="ejemplo@correo.com"
+                    >
 
-                <label>Contraseña:</label>
+                    <label>Contraseña:</label>
 
-                <input
-                    type="password"
-                    name="contrasena"
-                    <?php echo $usuarioEditar ? "" : "required"; ?>
-                    minlength="8"
-                    placeholder="<?php echo $usuarioEditar ? "Dejar vacío para conservar la actual" : "Mínimo 8 caracteres"; ?>"
-                >
+                    <input
+                        type="password"
+                        id="contrasena"
+                        name="contrasena"
+                        <?php echo $usuarioEditar ? "" : "required"; ?>
+                        minlength="8"
+                        placeholder="<?php echo $usuarioEditar ? "Dejar vacío para conservar la actual" : "Mínimo 8 caracteres"; ?>"
+                    >
 
-                <label>Rol:</label>
+                   <label>Rol:</label>
 
-                <select name="rol" required>
+                <select name="rol" id="rol" required>
 
                     <option value="">Seleccione un rol</option>
 
@@ -294,7 +280,7 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
                         <?php echo ($usuarioEditar["rol"] ?? "") === "cliente" ? "selected" : ""; ?>
                     >
                         Cliente
-                    </option>
+                   </option>
 
                 </select>
 
@@ -318,30 +304,26 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
             <h2>Usuarios registrados</h2>
 
-            <form method="GET" action="index.php">
-
-                <label>Buscar por nombre o correo:</label>
+            <div>
+                <label for="buscar">Buscar por nombre o correo:</label>
 
                 <input
-                    type="text"
-                    name="buscar"
-                    value="<?php echo limpiar($busqueda); ?>"
-                    placeholder="Escriba para buscar..."
+                type="text"
+                id="buscar"
+                placeholder="Escriba para buscar..."
                 >
 
-                <button type="submit" class="btn">
-                    Buscar
-                </button>
+                <label for="filtroRol">Filtrar por rol:</label>
 
-                <a href="index.php" class="btn">
-                    Mostrar todos
-                </a>
+                <select id="filtroRol">
+                    <option value="">Todos los roles</option>
+                    <option value="administrador">Administrador</option>
+                    <option value="empleado">Empleado</option>
+                    <option value="cliente">Cliente</option>
+                </select>
+            </div>
 
-            </form>
-
-            <br>
-
-            <p>Total de resultados: <?php echo count($usuarios); ?></p>
+            <p>Total de resultados: <span id="totalResultados"><?php echo count($usuarios); ?></span></p>
 
             <br>
 
@@ -357,22 +339,18 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
                     </tr>
                 </thead>
 
-                <tbody>
+                <tbody id="tablaUsuarios">
 
                     <?php foreach ($usuarios as $usuario): ?>
 
-                        <tr>
+                        <tr data-rol="<?php echo limpiar($usuario["rol"]); ?>">
 
                             <td><?php echo limpiar($usuario["id"]); ?></td>
-
                             <td><?php echo limpiar($usuario["nombre"]); ?></td>
-
                             <td><?php echo limpiar($usuario["correo"]); ?></td>
-
                             <td><?php echo limpiar(ucfirst($usuario["rol"])); ?></td>
 
                             <td>
-
                                 <a
                                     href="index.php?editar=<?php echo limpiar($usuario["id"]); ?>"
                                     class="btn"
@@ -386,12 +364,7 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
                                     onsubmit="return confirm('¿Seguro que deseas eliminar este usuario?');"
                                     style="display:inline;"
                                 >
-
-                                    <input
-                                        type="hidden"
-                                        name="accion"
-                                        value="eliminar"
-                                    >
+                                    <input type="hidden" name="accion" value="eliminar">
 
                                     <input
                                         type="hidden"
@@ -402,23 +375,17 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
                                     <button type="submit" class="btn btn-danger">
                                         Eliminar
                                     </button>
-
                                 </form>
+                          </td>
 
-                            </td>
-
-                        </tr>
+                         </tr>
 
                     <?php endforeach; ?>
 
                     <?php if (count($usuarios) === 0): ?>
-
-                        <tr>
-                            <td colspan="5">
-                                No se encontraron usuarios registrados.
-                            </td>
-                        </tr>
-
+                    <tr>
+                        <td colspan="5">No se encontraron usuarios registrados.</td>
+                    </tr>
                     <?php endif; ?>
 
                 </tbody>
@@ -428,6 +395,6 @@ $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
         </section>
 
     </main>
-
+    <script src="../assets/js/usuarios.js"></script>
 </body>
 </html>
