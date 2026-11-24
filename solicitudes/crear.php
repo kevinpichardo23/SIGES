@@ -1,0 +1,11 @@
+<?php
+require 'comun.php'; permiso(['administrador','cliente']);
+$clientes=consulta('SELECT id, CONCAT(nombre," ",apellido) nombre FROM clientes WHERE estado="Activo"'.($rol==='cliente'?' AND correo=?':''),$rol==='cliente'?[$_SESSION['correo']]:[])->fetchAll(PDO::FETCH_ASSOC);
+$servicios=consulta('SELECT id,nombre FROM servicios ORDER BY nombre')->fetchAll(PDO::FETCH_ASSOC);
+$error='';
+if($_SERVER['REQUEST_METHOD']==='POST'){
+ verificar(); $c=(int)($_POST['cliente_id']??0); $v=(int)($_POST['servicio_id']??0); $d=trim($_POST['descripcion']??''); $p=$_POST['prioridad']??'';
+ if(!in_array($c,array_column($clientes,'id')) || !in_array($v,array_column($servicios,'id')) || $d==='' || !in_array($p,$prioridades,true)) $error='Completa todos los campos correctamente.';
+ else { try { $conexion->beginTransaction(); consulta('INSERT INTO solicitudes(cliente_id,servicio_id,descripcion,prioridad) VALUES(?,?,?,?)',[$c,$v,$d,$p]); $id=$conexion->lastInsertId(); consulta('INSERT INTO historial(solicitud_id,usuario_id,estado_anterior,estado_nuevo) VALUES(?,?,?,?)',[$id,$uid,'Registro','Pendiente']); $conexion->commit(); volver(); } catch(PDOException $e){ if($conexion->inTransaction()) $conexion->rollBack(); $error='No se pudo guardar la solicitud.'; } }
+}
+inicio('Nueva solicitud'); ?><section class="section formulario"><?php if($error): ?><p class="error"><?=h($error)?></p><?php endif; ?><?php if(!$clientes): ?><p class="error">No hay un cliente activo asociado a esta cuenta.</p><?php endif; ?><form method="post"><?=token()?><label>Cliente<select name="cliente_id" required><option value="">Seleccionar</option><?php seleccionar($clientes,$_POST['cliente_id']??0); ?></select></label><label>Servicio<select name="servicio_id" required><option value="">Seleccionar</option><?php seleccionar($servicios,$_POST['servicio_id']??0); ?></select></label><label>Descripción<textarea name="descripcion" required rows="5"><?=h($_POST['descripcion']??'')?></textarea></label><label>Prioridad<select name="prioridad"><?php opciones($prioridades,$_POST['prioridad']??'Media'); ?></select></label><button class="btn" <?=!$clientes?'disabled':''?>>Guardar solicitud</button> <a href="listar.php">Cancelar</a></form></section><?php fin(); ?>

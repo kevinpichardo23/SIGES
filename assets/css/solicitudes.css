@@ -1,0 +1,15 @@
+.tabla-scroll { overflow-x:auto; }
+.formulario { max-width:760px; }
+.formulario p { margin-bottom:18px; }
+.filtros { display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-top:20px; }
+.filtros label { flex:1 1 150px; }
+.acciones a { display:block; margin:5px 0; color:#1d4ed8; }
+.etiqueta { background:#e2e8f0; padding:5px 9px; border-radius:6px; white-space:nowrap; }
+.etiqueta.alta { background:#fee2e2; color:#991b1b; }
+.aviso,.error { padding:12px; margin-bottom:16px; border-radius:7px; background:#dcfce7; color:#166534; }
+.error { background:#fee2e2; color:#991b1b; }
+.grafico { margin-top:20px; }
+.barra-fila { display:grid; grid-template-columns:minmax(100px, 220px) 1fr 40px; gap:12px; align-items:center; margin:14px 0; }
+.barra-pista { background:#e2e8f0; height:22px; border-radius:5px; overflow:hidden; }
+.barra-valor { height:100%; background:#2563eb; }
+@media(max-width:600px){ .sidebar { position:static; width:100%; height:auto; } .main-content { margin-left:0; padding:14px; } .header { flex-wrap:wrap; gap:10px; } .barra-fila { grid-template-columns:100px 1fr 30px; } }

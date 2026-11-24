@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iniciar sesión - TechServices</title>
+    <title>Iniciar sesión - SIGES</title>
 
     <link rel="stylesheet" href="../assets/css/login.css">
 </head>
@@ -12,7 +12,11 @@
 
     <div class="form-container">
 
-        <h3 class="titulo">Tech<span>Services</span></h3>
+        <h3 class="titulo">SIGES</h3>
+
+        <?php if (isset($_GET['error'])): ?>
+            <p role="alert" style="color: #b91c1c; text-align: center; margin-bottom: 16px;">Correo o contraseña incorrectos.</p>
+        <?php endif; ?>
 
         <form action="procesar_login.php" method="POST">
 

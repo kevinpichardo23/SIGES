@@ -1,7 +1,11 @@
 <?php
 
 // Selección provisional de roles
-$rol = "administrador";
+session_start();
+$rol = $_SESSION['rol'] ?? '';
+if (empty($_SESSION['id_usuario']) || !in_array($rol, ['administrador','empleado','cliente'], true)) {
+    header('Location: auth/login.php'); exit;
+}
 
 // Opciones: administrador, empleado y cliente
 
@@ -137,6 +141,8 @@ $totalUsuarios = $consultaUsuarios->fetchColumn();
                 <a href="empleados/index.php" class="btn">
                     Gestionar empleados
                 </a>
+                <a href="solicitudes/listar.php" class="btn">Gestionar solicitudes</a>
+                <a href="reportes/index.php" class="btn">Ver reportes</a>
 
             </section>
 

@@ -1,0 +1,5 @@
+<?php
+require 'comun.php'; permiso(['administrador']); $id=(int)($_GET['id']??0); $s=solicitud($id); $error='';
+$empleados=consulta('SELECT e.id, CONCAT(u.nombre," — ",e.especialidad," (",e.estado,")") nombre FROM empleados e JOIN usuarios u ON u.id=e.usuario_id WHERE u.rol="empleado" ORDER BY u.nombre')->fetchAll(PDO::FETCH_ASSOC);
+if($_SERVER['REQUEST_METHOD']==='POST'){ verificar(); $e=(int)($_POST['empleado_id']??0); if($e && !in_array($e,array_column($empleados,'id'))) $error='Empleado inválido.'; else { consulta('UPDATE solicitudes SET empleado_id=? WHERE id=?',[$e?:null,$id]); volver(); } }
+inicio('Asignar solicitud #'.$id); ?><section class="section formulario"><p><?=h($s['servicio'])?> — <?=h($s['descripcion'])?></p><?php if($error): ?><p class="error"><?=h($error)?></p><?php endif; ?><form method="post"><?=token()?><label>Empleado responsable<select name="empleado_id"><option value="0">Sin asignar</option><?php seleccionar($empleados,$s['empleado_id']); ?></select></label><button class="btn">Guardar asignación</button> <a href="listar.php">Cancelar</a></form></section><?php fin(); ?>

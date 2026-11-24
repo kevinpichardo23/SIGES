@@ -2,10 +2,10 @@ USE siges;
 
 -- 1. Usuarios
 INSERT INTO usuarios (id, nombre, correo, contraseña, rol) VALUES
-(1, 'Administrador', 'admin@siges.com', 'Admin123', 'administrador'),
-(2, 'Carlos Méndez', 'carlos@siges.com', 'Carlos123', 'empleado'),
-(3, 'Laura Pérez', 'laura@siges.com', 'Laura123', 'empleado'),
-(4, 'Pedro Gómez', 'pedro@siges.com', 'Pedro123', 'cliente');
+(1, 'Administrador', 'admin@siges.com', '$2y$12$Z37k7jR0.ZwOKy2f5oO.yeEEQe5EfeOAygSiw25bOIh73e4Ei6iNq', 'administrador'),
+(2, 'Carlos Méndez', 'carlos@siges.com', '$2y$12$rFZCNw3e56AOCcMfgnSoO.uoZI2MNeGgoRivoKHsjkeCR7ymNszo6', 'empleado'),
+(3, 'Laura Pérez', 'laura@siges.com', '$2y$12$oXPVlog6eT1jS9fcSPxbXu4S/9ORyGwXMEal5ckvi3zV8WhPl/AM.', 'empleado'),
+(4, 'Pedro Gómez', 'pedro@siges.com', '$2y$12$YskqtTO2PHQ6Sdx2Oog.P.jkrKsWuuZ2Oy8XnAdvMU3tAAVoRq43W', 'cliente');
 
 -- 2. Clientes
 INSERT INTO clientes (id, nombre, apellido, identificacion, telefono, correo, direccion, estado) VALUES

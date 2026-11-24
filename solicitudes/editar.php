@@ -1,0 +1,4 @@
+<?php
+require 'comun.php'; permiso(['administrador']); $id=(int)($_GET['id']??0); $s=solicitud($id); $error='';
+if($_SERVER['REQUEST_METHOD']==='POST'){ verificar(); $d=trim($_POST['descripcion']??''); $p=$_POST['prioridad']??''; if($d==='' || !in_array($p,$prioridades,true)) $error='Datos inválidos.'; else { consulta('UPDATE solicitudes SET descripcion=?,prioridad=? WHERE id=?',[$d,$p,$id]); volver(); } }
+inicio('Editar solicitud #'.$id); ?><section class="section formulario"><p><?=h($s['cliente'])?> — <?=h($s['servicio'])?></p><?php if($error): ?><p class="error"><?=h($error)?></p><?php endif; ?><form method="post"><?=token()?><label>Descripción<textarea name="descripcion" required rows="5"><?=h($s['descripcion'])?></textarea></label><label>Prioridad<select name="prioridad"><?php opciones($prioridades,$s['prioridad']); ?></select></label><button class="btn">Guardar cambios</button> <a href="listar.php">Cancelar</a></form></section><?php fin(); ?>

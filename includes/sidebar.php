@@ -49,6 +49,9 @@ $rutaBase = (strpos($_SERVER["PHP_SELF"], "/usuarios/") !== false ||
         </a>
 
 
+        <a href="<?php echo $rutaBase; ?>solicitudes/listar.php" class="<?php echo $paginaActual === 'solicitudes' ? 'active' : ''; ?>">Solicitudes</a>
+        <a href="<?php echo $rutaBase; ?>reportes/index.php" class="<?php echo $paginaActual === 'reportes' ? 'active' : ''; ?>">Reportes</a>
+
     <?php elseif ($rol === "empleado"): ?>
 
         <!-- OPCIONES DEL EMPLEADO -->
