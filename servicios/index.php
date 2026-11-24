@@ -92,6 +92,7 @@ $servicios = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
     <?php
         $paginaActual = "servicios";
+        $rol="administrador";
         $rutaBase = "../";
         include "../includes/sidebar.php";
     ?>

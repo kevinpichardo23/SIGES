@@ -142,6 +142,7 @@ $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
 
     <?php
         $paginaActual = "clientes";
+        $rol="administrador";
         $rutaBase = "../";
         include "../includes/sidebar.php";
     ?>
