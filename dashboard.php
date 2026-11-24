@@ -1,26 +1,31 @@
 <?php
-// Conectar con la base de datos
+
+// Selección provisional de roles
+$rol = "administrador";
+
+// Opciones: administrador, empleado y cliente
+
 require_once "config/conexion.php";
 
-// Contar clientes registrados
 $consultaClientes = $conexion->query(
     "SELECT COUNT(*) FROM clientes"
 );
 
 $totalClientes = $consultaClientes->fetchColumn();
 
-// Contar servicios registrados
+
 $consultaServicios = $conexion->query(
     "SELECT COUNT(*) FROM servicios"
 );
 
 $totalServicios = $consultaServicios->fetchColumn();
 
+
 $consultaUsuarios = $conexion->query(
     "SELECT COUNT(*) FROM usuarios"
-
 );
- $totalUsuarios = $consultaUsuarios->fetchColumn();
+
+$totalUsuarios = $consultaUsuarios->fetchColumn();
 
 ?>
 
@@ -38,13 +43,11 @@ $consultaUsuarios = $conexion->query(
 
 <body>
 
-    <!-- MENU LATERAL -->
     <?php
         $paginaActual = "dashboard";
         include "includes/sidebar.php";
     ?>
 
-    <!-- CONTENIDO -->
     <main class="main-content">
 
         <header class="header">
@@ -54,76 +57,148 @@ $consultaUsuarios = $conexion->query(
             </div>
 
             <div>
-                <strong>Administrador</strong>
+                <strong>
+                    <?php echo ucfirst($rol); ?>
+                </strong>
             </div>
         </header>
 
-        <!-- TARJETAS -->
-        <section class="cards">
 
-            <div class="card">
-                <h3>Total de Usuario</h3>
+        <?php if ($rol === "administrador"): ?>
 
-                <div class="number">
-                    <?php echo $totalUsuarios; ?>
+            <!-- DASHBOARD DEL ADMINISTRADOR -->
+
+            <section class="cards">
+
+                <div class="card">
+                    <h3>Total de usuarios</h3>
+
+                    <div class="number">
+                        <?php echo $totalUsuarios; ?>
+                    </div>
+
+                    <p>Usuarios registrados</p>
                 </div>
 
-                <p>Usuarios registrados</p>
-            </div>
+                <div class="card">
+                    <h3>Total de clientes</h3>
 
-            <div class="card">
-                <h3>Total de clientes</h3>
+                    <div class="number">
+                        <?php echo $totalClientes; ?>
+                    </div>
 
-                <div class="number">
-                    <?php echo $totalClientes; ?>
+                    <p>Clientes registrados</p>
                 </div>
 
-                <p>Clientes registrados</p>
-            </div>
+                <div class="card">
+                    <h3>Servicios disponibles</h3>
 
-            <div class="card">
-                <h3>Servicios disponibles</h3>
+                    <div class="number">
+                        <?php echo $totalServicios; ?>
+                    </div>
 
-                <div class="number">
-                    <?php echo $totalServicios; ?>
+                    <p>Servicios registrados</p>
                 </div>
 
-                <p>Servicios registrados</p>
-            </div>
+                <div class="card">
+                    <h3>Gestión del sistema</h3>
 
-            <div class="card">
-                <h3>Gestión del sistema</h3>
-                <div class="number">100%</div>
-                <p>Control de clientes y servicios</p>
-            </div>
+                    <div class="number">100%</div>
 
-        </section>
+                    <p>Control de clientes y servicios</p>
+                </div>
 
-        <!-- BIENVENIDA -->
-        <section class="section">
+            </section>
 
-            <h2>Bienvenido a TechServices</h2>
+            <!-- BIENVENIDA DEL ADMINISTRADOR -->
+            <section class="section">
 
-            <p>
-                Desde este panel podrás administrar los clientes
-                y los servicios tecnológicos ofrecidos por la empresa.
-            </p>
+                <h2>Bienvenido a TechServices</h2>
 
-            <br>
+                <p>
+                    Desde este panel podrás administrar los clientes
+                    y los servicios tecnológicos ofrecidos por la empresa.
+                </p>
 
-            <a href="clientes/index.php" class="btn">
-                Gestionar clientes
-            </a>
+                <br>
 
-            <a href="servicios/index.php" class="btn">
-                Gestionar servicios
-            </a>
+                <a href="clientes/index.php" class="btn">
+                    Gestionar clientes
+                </a>
 
-            <a href="usuarios/index.php" class="btn">
-                Gestionar usuarios
-            </a>
+                <a href="servicios/index.php" class="btn">
+                    Gestionar servicios
+                </a>
 
-        </section>
+                <a href="usuarios/index.php" class="btn">
+                    Gestionar usuarios
+                </a>
+
+                <a href="empleados/index.php" class="btn">
+                    Gestionar empleados
+                </a>
+
+            </section>
+
+
+        <?php elseif ($rol === "empleado"): ?>
+
+            <!-- DASHBOARD DEL EMPLEADO -->
+
+            <section class="section">
+
+                <h2>Bienvenido a TechServices</h2>
+
+                <p>
+                    Desde este panel podrás consultar y gestionar
+                    las solicitudes de servicio que te sean asignadas.
+                </p>
+
+                <br>
+
+                <a href="solicitudes/listar.php" class="btn">
+                    Mis solicitudes
+                </a>
+
+            </section>
+
+
+        <?php elseif ($rol === "cliente"): ?>
+
+            <!-- DASHBOARD DEL CLIENTE -->
+
+            <section class="section">
+
+                <h2>Bienvenido a TechServices</h2>
+
+                <p>
+                    Desde este panel podrás solicitar servicios tecnológicos
+                    y consultar el estado de tus solicitudes.
+                </p>
+
+                <br>
+
+                <a href="solicitudes/crear.php" class="btn">
+                    Crear solicitud
+                </a>
+
+                <a href="solicitudes/listar.php" class="btn">
+                    Consultar mis solicitudes
+                </a>
+
+            </section>
+
+
+        <?php else: ?>
+
+            <!-- Sin rol -->
+
+            <section class="section">
+                <h2>error</h2>
+                <p>No se pudo identificar el tipo de usuario.</p>
+            </section>
+
+        <?php endif; ?>
 
     </main>
 
