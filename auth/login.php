@@ -18,6 +18,12 @@
             <p role="alert" style="color: #b91c1c; text-align: center; margin-bottom: 16px;">Correo o contraseña incorrectos.</p>
         <?php endif; ?>
 
+        <?php if (isset($_GET['recuperada'])): ?>
+            <p role="status" style="color: #15803d; text-align: center; margin-bottom: 16px;">
+                Tu contraseña se ha cambiado correctamente. Ya puedes iniciar sesión.
+            </p>
+        <?php endif; ?>
+
         <form action="procesar_login.php" method="POST">
 
             <div class="campo">
@@ -47,6 +53,10 @@
             </button>
 
         </form>
+
+        <p class="recuperar">
+            <a href="recuperar.php">¿Olvidaste tu contraseña?</a>
+        </p>
 
     </div>
 
