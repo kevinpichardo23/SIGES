@@ -16,13 +16,16 @@ CREATE TABLE usuarios (
 -- Tabla de clientes
 CREATE TABLE clientes (
     id INT AUTO_INCREMENT PRIMARY KEY,
+    usuario_id INT NULL UNIQUE,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL DEFAULT '',
     identificacion VARCHAR(30) NULL,
     telefono VARCHAR(20) NOT NULL,
     correo VARCHAR(100) NOT NULL,
     direccion VARCHAR(200) NOT NULL,
-    estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo'
+    estado ENUM('Activo', 'Inactivo') NOT NULL DEFAULT 'Activo',
+    CONSTRAINT fk_clientes_usuarios
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
 -- Tabla de empleados

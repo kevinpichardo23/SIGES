@@ -1,30 +1,75 @@
-
 <?php
+session_start();
+
+if (
+    empty($_SESSION["id_usuario"]) ||
+    ($_SESSION["rol"] ?? "") !== "administrador"
+) {
+    header("Location: ../auth/login.php");
+    exit;
+}
+
 require_once "../config/conexion.php";
 
 $mensaje = "";
 
-// FUNCIÓN PARA MOSTRAR TEXTO DE FORMA SEGURA
 function limpiar($dato) {
     return htmlspecialchars((string)$dato, ENT_QUOTES, "UTF-8");
 }
 
-// REGISTRAR, ACTUALIZAR O ELIMINAR CLIENTES
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     $accion = $_POST["accion"] ?? "";
 
     try {
 
+        if ($accion === "guardar" || $accion === "actualizar") {
+
+            $usuarioId = trim($_POST["usuario_id"] ?? "");
+            $usuarioId = $usuarioId !== "" ? $usuarioId : null;
+
+            if ($usuarioId !== null) {
+
+                $idCliente = $accion === "actualizar"
+                    ? (int)($_POST["id"] ?? 0)
+                    : 0;
+
+                $consultaUsuario = $conexion->prepare(
+                    "SELECT COUNT(*)
+                     FROM usuarios u
+                     WHERE u.id = ?
+                     AND u.rol = 'cliente'
+                     AND NOT EXISTS (
+                         SELECT 1
+                         FROM clientes c
+                         WHERE c.usuario_id = u.id
+                         AND c.id <> ?
+                     )"
+                );
+
+                $consultaUsuario->execute([
+                    $usuarioId,
+                    $idCliente
+                ]);
+
+                if (!$consultaUsuario->fetchColumn()) {
+                    throw new Exception(
+                        "La cuenta seleccionada no está disponible."
+                    );
+                }
+            }
+        }
+
         if ($accion === "guardar") {
 
             $sql = "INSERT INTO clientes
-                    (nombre, apellido, identificacion, correo, telefono, direccion)
-                    VALUES (?, ?, ?, ?, ?, ?)";
+                    (usuario_id, nombre, apellido, identificacion, correo, telefono, direccion)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)";
 
             $consulta = $conexion->prepare($sql);
 
             $consulta->execute([
+                $usuarioId,
                 trim($_POST["nombre"]),
                 trim($_POST["apellido"]),
                 trim($_POST["identificacion"]) ?: null,
@@ -34,12 +79,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ]);
 
             $mensaje = "Cliente registrado correctamente.";
-
         }
 
         if ($accion === "actualizar") {
 
             $sql = "UPDATE clientes SET
+                    usuario_id = ?,
                     nombre = ?,
                     apellido = ?,
                     identificacion = ?,
@@ -51,6 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $consulta = $conexion->prepare($sql);
 
             $consulta->execute([
+                $usuarioId,
                 trim($_POST["nombre"]),
                 trim($_POST["apellido"]),
                 trim($_POST["identificacion"]) ?: null,
@@ -61,9 +107,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ]);
 
             $mensaje = "Cliente actualizado correctamente.";
-
         }
 
+        // ELIMINAR CLIENTE
         if ($accion === "eliminar") {
 
             $consulta = $conexion->prepare(
@@ -73,17 +119,19 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $consulta->execute([$_POST["id"]]);
 
             $mensaje = "Cliente eliminado correctamente.";
-
         }
 
     } catch (PDOException $e) {
 
-        $mensaje = "No se pudo completar la operación. Verifica que el correo y la identificación no estén repetidos.";
+        $mensaje = "No se pudo completar la operación. Verifica los datos y que el cliente no tenga solicitudes asociadas.";
+
+    } catch (Exception $e) {
+
+        $mensaje = $e->getMessage();
 
     }
 }
 
-// BUSCAR CLIENTE PARA EDITAR
 $clienteEditar = null;
 
 if (isset($_GET["editar"])) {
@@ -96,6 +144,21 @@ if (isset($_GET["editar"])) {
 
     $clienteEditar = $consulta->fetch(PDO::FETCH_ASSOC);
 }
+
+$idClienteActual = $clienteEditar["id"] ?? 0;
+
+$consultaUsuarios = $conexion->prepare(
+    "SELECT u.id, u.nombre, u.correo
+     FROM usuarios u
+     LEFT JOIN clientes c ON c.usuario_id = u.id
+     WHERE u.rol = 'cliente'
+     AND (c.id IS NULL OR c.id = ?)
+     ORDER BY u.nombre"
+);
+
+$consultaUsuarios->execute([$idClienteActual]);
+
+$usuariosCliente = $consultaUsuarios->fetchAll(PDO::FETCH_ASSOC);
 
 // BUSCAR CLIENTES
 $busqueda = trim($_GET["buscar"] ?? "");
@@ -112,7 +175,11 @@ if ($busqueda !== "") {
 
     $termino = "%$busqueda%";
 
-    $consulta->execute([$termino, $termino, $termino]);
+    $consulta->execute([
+        $termino,
+        $termino,
+        $termino
+    ]);
 
 } else {
 
@@ -221,10 +288,30 @@ $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
                     placeholder="ejemplo@correo.com"
                 >
 
+                <label>Cuenta de usuario:</label>
+
+                <select name="usuario_id">
+
+                    <option value="">Sin cuenta asociada</option>
+
+                    <?php foreach ($usuariosCliente as $usuario): ?>
+
+                        <option
+                            value="<?php echo limpiar($usuario["id"]); ?>"
+                            <?php echo (string)($clienteEditar["usuario_id"] ?? "") === (string)$usuario["id"] ? "selected" : ""; ?>
+                        >
+                            <?php echo limpiar($usuario["nombre"] . " - " . $usuario["correo"]); ?>
+                        </option>
+
+                    <?php endforeach; ?>
+
+                </select>
+
                 <label>Teléfono:</label>
                 <input
                     type="text"
                     name="telefono"
+                    required
                     value="<?php echo limpiar($clienteEditar["telefono"] ?? ""); ?>"
                     placeholder="Ingrese el teléfono"
                 >
@@ -233,6 +320,7 @@ $clientes = $consulta->fetchAll(PDO::FETCH_ASSOC);
                 <textarea
                     name="direccion"
                     rows="3"
+                    required
                     placeholder="Ingrese la dirección"
                 ><?php echo limpiar($clienteEditar["direccion"] ?? ""); ?></textarea>
 

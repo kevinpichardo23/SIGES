@@ -8,10 +8,10 @@ INSERT INTO usuarios (id, nombre, correo, contraseña, rol) VALUES
 (4, 'Pedro Gómez', 'pedro@siges.com', '$2y$12$YskqtTO2PHQ6Sdx2Oog.P.jkrKsWuuZ2Oy8XnAdvMU3tAAVoRq43W', 'cliente');
 
 -- 2. Clientes
-INSERT INTO clientes (id, nombre, apellido, identificacion, telefono, correo, direccion, estado) VALUES
-(1, 'Pedro', 'Gómez', '001-1234567-8', '809-555-1001', 'pedro@siges.com', 'Bonao', 'Activo'),
-(2, 'María', 'Rodríguez', '001-9876543-2', '809-555-1002', 'maria@gmail.com', 'Santiago', 'Activo'),
-(3, 'José', 'Martínez', '001-4567890-1', '809-555-1003', 'jose@gmail.com', 'La Vega', 'Activo');
+INSERT INTO clientes (id, usuario_id, nombre, apellido, identificacion, telefono, correo, direccion, estado) VALUES
+(1, 4, 'Pedro', 'Gómez', '001-1234567-8', '809-555-1001', 'pedro@siges.com', 'Bonao', 'Activo'),
+(2, NULL, 'María', 'Rodríguez', '001-9876543-2', '809-555-1002', 'maria@gmail.com', 'Santiago', 'Activo'),
+(3, NULL, 'José', 'Martínez', '001-4567890-1', '809-555-1003', 'jose@gmail.com', 'La Vega', 'Activo');
 
 -- 3. Empleados
 INSERT INTO empleados (id, usuario_id, especialidad, estado) VALUES
