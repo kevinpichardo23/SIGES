@@ -57,7 +57,7 @@ $rutaBase = (strpos($_SERVER["PHP_SELF"], "/usuarios/") !== false ||
         <!-- OPCIONES DEL EMPLEADO -->
 
         <a href="<?php echo $rutaBase; ?>solicitudes/listar.php"
-           class="<?php echo $paginaActual === 'solicitudes' ? 'active' : ''; ?>">
+           class="<?php echo $paginaActual === 'mis_solicitudes_empleado' ? 'active' : ''; ?>">
             Mis solicitudes
         </a>
 
@@ -66,12 +66,13 @@ $rutaBase = (strpos($_SERVER["PHP_SELF"], "/usuarios/") !== false ||
 
         <!-- OPCIONES DEL CLIENTE -->
 
-        <a href="<?php echo $rutaBase; ?>solicitudes/crear.php">
+        <a href="<?php echo $rutaBase; ?>solicitudes/crear.php"
+           class="<?php echo $paginaActual === 'crear_solicitudes' ? 'active' : ''; ?>">
             Crear solicitud
         </a>
 
         <a href="<?php echo $rutaBase; ?>solicitudes/listar.php"
-           class="<?php echo $paginaActual === 'solicitudes' ? 'active' : ''; ?>">
+           class="<?php echo $paginaActual === 'mis_solicitudes' ? 'active' : ''; ?>">
             Mis solicitudes
         </a>
 

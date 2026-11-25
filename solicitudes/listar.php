@@ -6,7 +6,7 @@ if(in_array($estado,$estados,true)){ $w.=' AND s.estado=?'; $a[]=$estado; }
 if(in_array($prioridad,$prioridades,true)){ $w.=' AND s.prioridad=?'; $a[]=$prioridad; }
 if($buscar!==''){ $w.=' AND (c.nombre LIKE ? OR c.apellido LIKE ? OR v.nombre LIKE ? OR s.descripcion LIKE ?)'; for($i=0;$i<4;$i++) $a[]='%'.$buscar.'%'; }
 $filas=consulta('SELECT s.*, CONCAT(c.nombre," ",c.apellido) cliente,v.nombre servicio,u.nombre empleado'.baseSQL().' WHERE '.$w.' ORDER BY s.fecha DESC,s.id DESC',$a)->fetchAll(PDO::FETCH_ASSOC);
-inicio('Solicitudes de servicios'); ?>
+inicio('Solicitudes de servicios', $rol === 'administrador' ? 'solicitudes' : ($rol === 'empleado' ? 'mis_solicitudes_empleado' : 'mis_solicitudes')); ?>
 <section class="section">
 <?php if(isset($_GET['ok'])): ?><p class="aviso">Cambios guardados correctamente.</p><?php endif; ?>
 <?php if($rol!=='empleado'): ?><a class="btn" href="crear.php">Nueva solicitud</a><?php endif; ?>
