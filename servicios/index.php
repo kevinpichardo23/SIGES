@@ -1,4 +1,14 @@
 <?php
+session_start();
+
+if (
+    empty($_SESSION["id_usuario"]) ||
+    ($_SESSION["rol"] ?? "") !== "administrador"
+) {
+    header("Location: ../auth/login.php");
+    exit;
+}
+
 require_once "../config/conexion.php";
 
 $mensaje = "";
